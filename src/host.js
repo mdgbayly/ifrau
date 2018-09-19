@@ -22,40 +22,42 @@ function Host(elementProvider, src, options) {
 
 	options = options || {};
 
-	var origin = Host._tryGetOrigin(src);
-	if (origin === null) {
-		throw new Error('Unable to extract origin from "' + src + '"');
-	}
+	// var origin = Host._tryGetOrigin(src);
+	// if (origin === null) {
+	// 	throw new Error('Unable to extract origin from "' + src + '"');
+	// }
 
-	var parent = elementProvider();
-	if (parent === null) {
-		throw new Error('Could not find parent node');
-	}
+	// var parent = elementProvider();
+	// if (parent === null) {
+	// 	throw new Error('Could not find parent node');
+	// }
 
-	var iframe = Host._createIFrame(src, options.id, options.height, options.allowFullScreen);
-	parent.appendChild(iframe);
+	// var iframe = Host._createIFrame(src, options.id, options.height, options.allowFullScreen);
+	// parent.appendChild(iframe);
 
-	Port.call(this, iframe.contentWindow, origin, options);
+	var targetElement = document.getElementsByTagName('head')[0];
+	// Port.call(this, iframe.contentWindow, origin, options);
+	Port.call(this, targetElement, '*', options);
 
-	this.iframe = iframe;
+// 	this.iframe = iframe;
 
-	if (options.syncLang) {
-		this.use(syncLang);
-		this.use(syncIntl);
-		this.use(syncTimezone);
-	}
-	this.use(syncTitle({page: options.syncPageTitle ? true : false}));
+	// if (options.syncLang) {
+	// 	this.use(syncLang);
+	// 	this.use(syncIntl);
+	// 	this.use(syncTimezone);
+	// }
+	// this.use(syncTitle({page: options.syncPageTitle ? true : false}));
 
-	if (!(options.height || options.height === 0) && options.resizeFrame !== false) {
-		this.use(resizer);
-	}
+	// if (!(options.height || options.height === 0) && options.resizeFrame !== false) {
+	// 	this.use(resizer);
+	// }
 
-	if (options.syncFont) {
-		this.use(syncFont);
-	}
-	if (options.syncCssVariable) {
-		this.use(syncCssVariable);
-	}
+	// if (options.syncFont) {
+	// 	this.use(syncFont);
+	// }
+	// if (options.syncCssVariable) {
+	// 	this.use(syncCssVariable);
+	// }
 }
 inherits(Host, Port);
 

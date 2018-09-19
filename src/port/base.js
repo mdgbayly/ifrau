@@ -22,6 +22,7 @@ function Port(endpoint, targetOrigin, options) {
 	this._messageHandlers = {};
 	this._onCloseCallbacks = [];
 	this._targetOrigin = targetOrigin;
+	this._eventSink = options.eventSink || window;
 
 	this._id = uuid();
 
@@ -90,7 +91,8 @@ Port.prototype.open = function open() {
 		throw new Error('Port is already open.');
 	}
 	this._isOpen = true;
-	window.addEventListener('message', this._receiveMessage.bind(this), false);
+	// window.addEventListener('message', this._receiveMessage.bind(this), false);
+	this._eventSink.addEventListener('message', this._receiveMessage.bind(this), false);
 	this.debug('opened');
 	return this;
 };
@@ -134,7 +136,16 @@ Port.prototype._sendMessage = function sendMessage(clazz, key, data) {
 		payload: data
 	};
 	this.debug('sending key: ' + message.key);
-	this._endpoint.postMessage(message, this._targetOrigin);
+	// this._endpoint.postMessage(message, this._targetOrigin);
+	if (this._endpoint.postMessage) {
+		this._endpoint.postMessage(message, this._targetOrigin);
+	} else {
+		var event = new MessageEvent('message', {
+			data: message,
+			source: window,
+		});
+		this._endpoint.dispatchEvent(event);
+	}
 	return this;
 };
 

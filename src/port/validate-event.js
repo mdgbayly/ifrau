@@ -5,7 +5,7 @@ function isStringEmpty(str) {
 }
 
 function validateEvent(targetOrigin, endpoint, e) {
-	var isValid = (e.source === endpoint)
+	var isValid = (e.source === endpoint || e.source === window)
 		&& (
 			targetOrigin === '*'
 			|| !isStringEmpty(targetOrigin)
